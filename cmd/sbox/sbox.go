@@ -41,6 +41,7 @@ var (
 	sandboxesRoot string
 	manifestFile  string
 	keepOutDir    bool
+	copyAllOutput bool
 )
 
 const (
@@ -55,6 +56,8 @@ func init() {
 		"textproto manifest describing the sandboxed command(s)")
 	flag.BoolVar(&keepOutDir, "keep-out-dir", false,
 		"whether to keep the sandbox directory when done")
+	flag.BoolVar(&copyAllOutput, "copy-all-output", false,
+		"whether to copy all output files")
 }
 
 func usageViolation(violation string) {
@@ -608,3 +611,10 @@ func makeAbsPathEnv(pathEnv string) (string, error) {
 	}
 	return strings.Join(pathEnvElements, string(filepath.ListSeparator)), nil
 }
+
+var filePathList []string
+	if copyAllOutput {
+		filePathList = findAllFilesUnder(tempDir)
+	} else {
+		filePathList = allOutputs
+	}
